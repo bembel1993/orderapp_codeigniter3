@@ -51,10 +51,31 @@ class Order extends CI_Controller {
         }
 
         $data['rows'] = $rows;
-		$data['page_title'] = 'List';
+		$data['page_title'] = 'List of products';
+
+
+        $show_characteristic = array();
+        $query2 = $this->db->query('SELECT dg.name as group_name, pdo.name as text, dcv.value  AS option_value , dcvp.value  AS option_value_presence 
+                                    FROM b_product_models_connections mc
+                                    JOIN b_product_details_connections dc ON dc.model_id = mc.model_id
+                                    JOIN b_product_details_connection_values dcv ON dcv.id = dc.value_id
+                                    JOIN b_product_details_connection_values_presence dcvp ON dcvp.id = dcv.presence
+                                    JOIN b_product_models m ON m.id = mc.model_id
+                                    JOIN b_product_details_groups dg ON dg.id = dc.group_id
+                                    JOIN b_product_details_options pdo ON pdo.id = dc.option_id
+                                    JOIN b_product_details_sets s ON s.id = dc.set_id
+                                    WHERE  mc.nomenklatura_id IN (470518, 417825, 401335, 536528, 462571, 453419 ,481621)
+                                    ORDER BY  dc.group_position, dc.option_position');
+
+        foreach ($query2->result_array() as $row)
+        {
+            $show_characteristic[] = $row;
+        }
+        $data['characteristic'] = $show_characteristic;
         
         $this->load->view('interface/header', $data);
         $this->load->view('interface/menu');
+        // $this->load->view('interface/filter_menu');
         $this->load->view('interface/content', $data);
         $this->load->view('interface/footer');
 	}
