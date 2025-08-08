@@ -15,7 +15,20 @@ class Order extends CI_Controller {
         $searchTerm = $this->input->post('search');
         $rows = array();
 
-        if ($searchTerm !== null && $searchTerm !== '') {
+        if ($searchTerm !== null && $searchTerm !== '') 
+        {
+            // $this->db->select('dg.name as group_name, pdo.name as text, dcv.value  AS option_value , dcvp.value  AS option_value_presence');
+            // $this->db->from('b_product_models_connections mc');
+            // $this->db->join('b_product_details_connections dc', 'dc.model_id = mc.model_id');
+            // $this->db->join('b_product_details_connection_values dcv', 'dcv.id = dc.value_id');
+            // $this->db->join('b_product_details_connection_values_presence dcvp', 'dcvp.id = dcv.presence');
+            // $this->db->join('b_product_models m', 'm.id = mc.model_id');
+            // $this->db->join('b_product_details_groups dg', 'dg.id = dc.group_id');
+            // $this->db->join('b_product_details_options pdo', 'pdo.id = dc.option_id');
+            // $this->db->join('b_product_details_sets s', 's.id = dc.set_id');
+            // $this->db->like('name_temp', $searchTerm);
+            // $query2 = $this->db->get('b_product_models_connections');
+
             $this->db->like('name_temp', $searchTerm);
             $query = $this->db->get('boo_nomenklatura');
         } else {
@@ -23,7 +36,8 @@ class Order extends CI_Controller {
         }
 
         $html = "";
-        if ($query->num_rows() > 0) {
+        if ($query->num_rows() > 0) 
+        {
             $headers = array_keys($query->row_array());
             foreach ($query->result_array() as $row) {
                 $html .= '<tr>';
@@ -55,6 +69,10 @@ class Order extends CI_Controller {
 
 
         $show_characteristic = array();
+        $group_name = array();
+        $text = array();
+        $option_value = array();
+
         $query2 = $this->db->query('SELECT dg.name as group_name, pdo.name as text, dcv.value  AS option_value , dcvp.value  AS option_value_presence 
                                     FROM b_product_models_connections mc
                                     JOIN b_product_details_connections dc ON dc.model_id = mc.model_id
@@ -70,8 +88,14 @@ class Order extends CI_Controller {
         foreach ($query2->result_array() as $row)
         {
             $show_characteristic[] = $row;
+            $group_name[] = $row['group_name'];
+            $text[] = $row['text'];
+            $option_value[] = $row['option_value'];
         }
         $data['characteristic'] = $show_characteristic;
+        $data['group_name'] = array_unique($group_name);
+        $data['text'] = array_unique($text);
+        $data['option_value'] = $option_value;
         
         $this->load->view('interface/header', $data);
         $this->load->view('interface/menu');
