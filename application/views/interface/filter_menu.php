@@ -8,60 +8,62 @@
     box-sizing: border-box;
 ">
     <h3>Filter</h3>
-    <?php
-        $header_printed = false;
-        $date_printed = false;
+    <?php if (isset($characteristic) && is_array($characteristic) && count($characteristic) > 0): 
+        $current_group_name = '';
+        $current_text = '';
     ?>
+        <table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;">
+            <?php
+                foreach ($characteristic as $row): 
+                    $group_name = $row['group_name'];
+                    $text = $row['text'];
+                    $option_value = $row['option_value'];
+            ?>
+                <?php if($group_name !== $current_group_name):
+                    $current_group_name = $group_name;    
+                ?>
+                    <tr>
+                        <td colspan="3">
+                            <b><?php echo htmlspecialchars($group_name); ?></b>
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                <?php endif; ?>
 
-    <?php
-        $current_group = '';
-        $current_category = '';
+                <?php if($text !== $current_text):
+                    $current_text = $text;    
+                ?>
+                    <tr>
+                        <td colspan="3">
+                            <b><?php echo htmlspecialchars($text); ?></b>
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <tr>
+                        <td>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                
+                <tr>
+                <td>
 
-        echo '<table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;">';
-
-        foreach ($characteristic as $row) {
-            $group_name = $row['group_name'];
-            $text = $row['text'];
-            $option_value = $row['option_value'];
-
-            if ($group_name !== $current_group) {
-                echo '<tr>';
-                echo '<td colspan="3"><b>' . htmlspecialchars($group_name) . '</b></td>';
-                echo '</tr>';
-                $current_group = $group_name;
-            } else {
-                echo '<tr>';
-                echo '<td></td>';
-                echo '</tr>';
-            }
-
-            if ($text !== $current_category) {
-                echo '<tr>';
-                echo '<td colspan="3"><b>' . htmlspecialchars($text) . '</b></td>';
-                echo '</tr>';
-                $current_category = $text;
-            } else {
-                echo '<tr>';
-                echo '<td></td>';
-                echo '</tr>';
-            }
-
-            echo '<tr>';
-            echo '<td>';
-
-            echo htmlspecialchars($option_value);
-
-            $checked = '';
-            echo '<label style="margin-left:10px;">';
-            echo '<input type="checkbox" name="selected_items[]" value="' . htmlspecialchars($option_value) . '" ' . $checked . '>';
-            echo '</label>';
-
-            echo '</td>';
-
-            echo '</tr>';
-        }
-        echo '</table>';
-    ?>
+                <?php 
+                    echo htmlspecialchars($option_value); 
+                    $checked = '';
+                ?>
+                <label style="margin-left:10px;">
+                    <input type="checkbox" name="selected_items[]" value="<?php echo htmlspecialchars($option_value); ?><?php echo htmlspecialchars($checked); ?>">
+                </label>
+                </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php endif; ?>
 
 
     <!-- <?php if (isset($characteristic) && is_array($characteristic) && count($characteristic) > 0): ?>
