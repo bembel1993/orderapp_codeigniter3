@@ -12,7 +12,7 @@
         $current_group_name = '';
         $current_text = '';
     ?>
-        <table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;">
+        <table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" id="filtrSearchResult">
             <?php
                 foreach ($characteristic as $row): 
                     $group_name = $row['group_name'];
@@ -48,19 +48,21 @@
                         </td>
                     </tr>
                 <?php endif; ?>
-                
+            
                 <tr>
-                <td>
-
-                <?php 
-                    echo htmlspecialchars($option_value); 
-                    $checked = '';
-                ?>
-                <label style="margin-left:10px;">
-                    <input type="checkbox" name="selected_items[]" value="<?php echo htmlspecialchars($option_value); ?><?php echo htmlspecialchars($checked); ?>">
-                </label>
-                </td>
+                    <td>
+                    <?php 
+                        echo htmlspecialchars($option_value); 
+                        $checked = '';
+                    ?>
+                    </td>
+                    <td>
+                    <label style="margin-left:10px;">
+                        <input type="checkbox" name="selected_items[]" value="<?php echo htmlspecialchars($option_value); ?><?php echo htmlspecialchars($checked); ?>">
+                    </label>
+                    </td>
                 </tr>
+            
             <?php endforeach; ?>
         </table>
     <?php endif; ?>

@@ -14,12 +14,18 @@ class Order extends CI_Controller {
     {
         $searchTerm = $this->input->post('search');
         $rows = array();
+        
+        $response = [
+            'nomenklatura' => [],
+            'filtrdata' => []
+        ];
 
         if ($searchTerm !== null && $searchTerm !== '') 
         {
             $this->db->like('name', $searchTerm);
             $query = $this->db->get('boo_nomenklatura');
-
+            $result1 = $query->result_array();
+            $response['nomenklatura'] = $result1;
 //  START QUERY FILTER
             $searchId = array();
             if ($query->num_rows() > 0) {
@@ -41,27 +47,14 @@ class Order extends CI_Controller {
                 $this->db->where_in('mc.nomenklatura_id', $searchId);
             }
             $query2 = $this->db->get('b_product_models_connections');
-            print_r($query2);
+            $result2 = $query2->result_array();
+            $response['filtrdata'] = $result2;
+
+            echo json_encode($response);
 //  END QUERY FILTER
 
         } else {
             $query = $this->db->get('boo_nomenklatura');
-        }
-
-        $html = "";
-        if ($query->num_rows() > 0) 
-        {
-            $headers = array_keys($query->row_array());
-            foreach ($query->result_array() as $row) {
-                $html .= '<tr>';
-                foreach ($headers as $header) {
-                    $html .= '<td>' . htmlspecialchars($row[$header]) . '</td>';
-                }
-                $html .= '</tr>';
-            }
-            echo $html;
-        } else {
-            echo '<tr><td colspan="30">No result</td></tr>';
         }
     }
 
