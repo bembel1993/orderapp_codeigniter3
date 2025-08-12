@@ -6,12 +6,11 @@
 <script>
 $(document).ready(function () {
         console.log("Document is ready");
-            // loadAllRecords();
 
             $('#searchdata').on('keyup', function () {
                 console.log("Key pressed, value: " + $(this).val());
                 var query = $(this).val();
-                if (query.length > 2) {
+                if (query.length > 1) {
                     console.log("Length of query:", query.length);
 
                     $.ajax({
@@ -85,12 +84,12 @@ $(document).ready(function () {
 
                                 $('#filtrSearchResult').html(htmlFilter);
                             } else {
-                                $('#filtrSearchResult').html('<p>No data</p>');
+                                $('#filtrSearchResult').html('<td colspan="100%">No data</td>');
                             }
                         }
                     });
                 } else {
-                    loadAllRecords(query);
+                    loadAllRecords('');
                 }
             });
 

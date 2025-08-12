@@ -1,8 +1,7 @@
 <div style="display: flex;">
     <?php $this->load->view('interface/filter_menu'); ?>
     <div style="padding:27px; width: 80%; margin-left: 0px;">
-        <h2>Contents</h2>
-        <p>list of products</p>
+        <h2 style="padding-top:1%;">Contents</h2>
         <?php if (isset($rows) && is_array($rows) && count($rows) > 0): ?>
             <table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" id="searchResult">
                 <thead>
