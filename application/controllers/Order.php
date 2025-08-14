@@ -9,6 +9,45 @@ class Order extends CI_Controller {
         $this->load->database();
     }
 
+    public function choosedata()
+    {
+        $searchValues = $this->input->post('search');
+        $rows = array();
+
+        $response = [
+            'nomenklatura' => []
+        ];
+
+        if (!empty($searchValues) && is_array($searchValues)) {
+            // собираем условие для фильтрации
+            $this->db->select('mc.nomenklatura_id, dg.name as group_name, pdo.name as text, dcv.value  AS option_value , dcvp.value  AS option_value_presence');
+            $this->db->from('b_product_models_connections mc');
+            $this->db->join('b_product_details_connections dc', 'dc.model_id = mc.model_id');
+            $this->db->join('b_product_details_connection_values dcv', 'dcv.id = dc.value_id');
+            $this->db->join('b_product_details_connection_values_presence dcvp', 'dcvp.id = dcv.presence');
+            $this->db->join('b_product_models m', 'm.id = mc.model_id');
+            $this->db->join('b_product_details_groups dg', 'dg.id = dc.group_id');
+            $this->db->join('b_product_details_options pdo', 'pdo.id = dc.option_id');
+            $this->db->join('b_product_details_sets s', 's.id = dc.set_id');
+            $this->db->where_in('dcv.value', $searchValues);
+
+            $query = $this->db->get('b_product_models_connections');
+            $searchId = array();
+            if ($query->num_rows() > 0) {
+                foreach ($query->result() as $row) {
+                    $searchId[] = $row->nomenklatura_id;
+                }
+            }
+
+            $this->db->select('*');
+            $this->db->where_in('buh_id', $searchId);
+            $query2 = $this->db->get('boo_nomenklatura');
+            $response['nomenklatura'] = $query2->result_array();
+        }
+
+        echo json_encode($response);
+    }
+
 
     public function searchdata()
     {
@@ -24,8 +63,8 @@ class Order extends CI_Controller {
         {
             $this->db->like('name', $searchTerm);
             $query = $this->db->get('boo_nomenklatura');
-            $result1 = $query->result_array();
-            $response['nomenklatura'] = $result1;
+            $result = $query->result_array();
+            $response['nomenklatura'] = $result;
 //  START QUERY FILTER
             $searchId = array();
             if ($query->num_rows() > 0) {
@@ -46,6 +85,7 @@ class Order extends CI_Controller {
             if (!empty($searchId)) {
                 $this->db->where_in('mc.nomenklatura_id', $searchId);
             }
+            $this->db->order_by('dc.group_position', 'dc.option_position');
             $query2 = $this->db->get('b_product_models_connections');
             $result2 = $query2->result_array();
             $response['filtrdata'] = $result2;

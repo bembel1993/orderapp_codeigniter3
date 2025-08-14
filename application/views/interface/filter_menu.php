@@ -58,7 +58,7 @@
                     </td>
                     <td>
                     <label style="margin-left:10px;">
-                        <input type="checkbox" name="selected_items[]" value="<?php echo htmlspecialchars($option_value); ?><?php echo htmlspecialchars($checked); ?>">
+                        <input type="checkbox" id="select_value" name="selected_items[]" value="<?php echo htmlspecialchars($option_value); ?><?php echo htmlspecialchars($checked); ?>">
                     </label>
                     </td>
                 </tr>

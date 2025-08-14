@@ -21,9 +21,10 @@ $(document).ready(function () {
                         success: function (response) {
                             console.log("Successfully responce from server NOMENKLATURA:", response);
                             // HTML TABLE 1
-                            var htmlNomenklatura = '<table border="1">';
-                            var headers = Object.keys(response.nomenklatura[0]);
-                            if (response.nomenklatura.length > 0) {
+                            var htmlNomenklatura = '<table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" id="searchResult">';
+                            // var headers = Object.keys(response.nomenklatura[0]);
+                            if (response.nomenklatura && response.nomenklatura.length > 0) {
+                                var headers = Object.keys(response.nomenklatura[0]);
                                 htmlNomenklatura += '<tbody>';
                                 response.nomenklatura.forEach(function(row) {
                                     htmlNomenklatura += '<tr>';
@@ -72,7 +73,7 @@ $(document).ready(function () {
                                             htmlFilter += '<td>' + htmlspecialchars(option_value) + '</td>';
                                             htmlFilter += '<td>';
                                             htmlFilter += '<label style="margin-left:10px;">';
-                                            htmlFilter += '<input type="checkbox" name="selected_items[]" value="' + htmlspecialchars(option_value) + '" ' + checked + '>';
+                                            htmlFilter += '<input type="checkbox" id="select_value" name="selected_items[]" value="' + htmlspecialchars(option_value) + '" ' + checked + '>';
                                             htmlFilter += '</label>';
                                             htmlFilter += '</td>';
                                             htmlFilter += '</tr>';
@@ -83,8 +84,6 @@ $(document).ready(function () {
                                 htmlFilter += '</table>';
 
                                 $('#filtrSearchResult').html(htmlFilter);
-                            } else {
-                                $('#filtrSearchResult').html('<td colspan="100%">No data</td>');
                             }
                         }
                     });
@@ -103,10 +102,10 @@ $(document).ready(function () {
                         success: function (response) {
                             console.log("Successfully (loadAllRecords) :", response);
                             // HTML TABLE 1
-                            var htmlNomenklatura = '<table border="1">';
-                            var headers = Object.keys(response.nomenklatura[0]);
-                            if (response.nomenklatura.length > 0) {
-                                
+                            var htmlNomenklatura = '<table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" id="searchResult">';
+                            // var headers = Object.keys(response.nomenklatura[0]);
+                            if (response.nomenklatura && response.nomenklatura.length > 0) {
+                                var headers = Object.keys(response.nomenklatura[0]);
                                 htmlNomenklatura += '<tbody>';
                                 response.nomenklatura.forEach(function(row) 
                                 {
@@ -154,7 +153,7 @@ $(document).ready(function () {
                                             htmlFilter += '<td>' + htmlspecialchars(option_value) + '</td>';
                                             htmlFilter += '<td>';
                                             htmlFilter += '<label style="margin-left:10px;">';
-                                            htmlFilter += '<input type="checkbox" name="selected_items[]" value="' + htmlspecialchars(option_value) + '" ' + checked + '>';
+                                            htmlFilter += '<input type="checkbox" id="select_value" name="selected_items[]" value="' + htmlspecialchars(option_value) + '" ' + checked + '>';
                                             htmlFilter += '</label>';
                                             htmlFilter += '</td>';
                                             htmlFilter += '</tr>';
@@ -180,6 +179,42 @@ $(document).ready(function () {
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#39;');
             }
+        });
+</script>
+<script>
+        $(document).on('change', 'input[name="selected_items[]"]', function () {
+        var selectedValues = [];
+        $('input[name="selected_items[]"]:checked').each(function() {
+            selectedValues.push($(this).val());
+        });
+        console.log("Choice data :", selectedValues);
+            $.ajax({
+                    url: 'http://localhost/orderapp/index.php/order/choosedata',
+                    type: 'POST',
+                    data: { search: selectedValues },
+                    dataType: 'json',
+                    success: function (response) {
+                        console.log("Successfully choice :", response);
+                        var htmlNomenklatura = '<table border="1" cellpadding="1" cellspacing="0" style="border-collapse: collapse;" id="searchResult">';
+                        var headers = Object.keys(response.nomenklatura[0]);
+                        if (response.nomenklatura.length > 0) {
+                            
+                            htmlNomenklatura += '<tbody>';
+                            response.nomenklatura.forEach(function(row) 
+                            {
+                                htmlNomenklatura += '<tr>';
+                                headers.forEach(function(header) {
+                                    htmlNomenklatura += '<td>' + row[header] + '</td>';
+                                });
+                                htmlNomenklatura += '</tr>';
+                            });
+                        } else {
+                            htmlNomenklatura += '<tr><td colspan="100%">No data</td></tr></tbody></table>';
+                        }
+                        htmlNomenklatura += '</tbody></table>';
+                        $('#searchResult tbody').html(htmlNomenklatura);
+                    }
+                });
         });
 </script>
 
