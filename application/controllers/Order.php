@@ -19,7 +19,6 @@ class Order extends CI_Controller {
         ];
 
         if (!empty($searchValues) && is_array($searchValues)) {
-            // собираем условие для фильтрации
             $this->db->select('mc.nomenklatura_id, dg.name as group_name, pdo.name as text, dcv.value  AS option_value , dcvp.value  AS option_value_presence');
             $this->db->from('b_product_models_connections mc');
             $this->db->join('b_product_details_connections dc', 'dc.model_id = mc.model_id');

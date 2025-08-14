@@ -1,5 +1,3 @@
 <nav style="background-color:#333; padding:10px; width:100%; position:fixed; gap:10px; align-items:center;">
-    <!-- <form id="search_form" action="" method=""> -->
-        <input type="text" placeholder="Search..." style="padding:5px;" id="searchdata"/>
-    <!-- </form> -->
+    <input type="text" placeholder="Search..." style="padding:5px;" id="searchdata"/>
 </nav>
